@@ -1,0 +1,31 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <title>Work Log</title>
+    <link rel="stylesheet" href="/static/style.css" />
+  </head>
+  <body>
+    <h1>Work Log</h1>
+    <a href="/add">Add Entry</a>
+    <table>
+      <tr>
+        <th>PBI Number</th>
+        <th>Description</th>
+        <th>Sprint</th>
+        <th>Effort (Story Points)</th>
+        <th>Comments</th>
+      </tr>
+      {% for entry in entries %}
+      <tr>
+        <td>{{ entry.pbi_number }}</td>
+        <td>{{ entry.description }}</td>
+        <td>{{ entry.sprint }}</td>
+        <td>{{ entry.effort }}</td>
+        <td>{{ entry.comments }}</td>
+        <td><a href="/delete/{{ entry.id }}">Delete</a></td>
+      </tr>
+      {% endfor %}
+    </table>
+  </body>
+</html>

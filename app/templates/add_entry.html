@@ -1,0 +1,27 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <title>Add Work Log Entry</title>
+    <link rel="stylesheet" href="/static/style.css" />
+  </head>
+  <body>
+    <h1>Add Work Log Entry</h1>
+    <form method="post">
+      <label>PBI Number: <input type="text" name="pbi_number" required /></label
+      ><br />
+      <label
+        >Description: <textarea name="description" required></textarea></label
+      ><br />
+      <label>Sprint: <input type="text" name="sprint" required /></label><br />
+      <label>
+        Effort (Story Points):
+        <input type="number" step="1" name="effort" required />
+      </label>
+      <br />
+      <label>Comments: <textarea name="comments"></textarea></label><br />
+      <button type="submit">Add Entry</button>
+    </form>
+    <a href="/">Back to Work Log</a>
+  </body>
+</html>
