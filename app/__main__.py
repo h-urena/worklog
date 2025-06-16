@@ -1,3 +1,4 @@
+"""Main entry point for running the Work Log Flask app."""
 from app import app, db
 
 if __name__ == "__main__":
