@@ -2,26 +2,66 @@
 <html lang="en">
   <head>
     <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Add Work Log Entry</title>
     <link rel="stylesheet" href="/static/style.css" />
   </head>
   <body>
     <h1>Add Work Log Entry</h1>
-    <form method="post">
-      <label>PBI Number: <input type="text" name="pbi_number" required /></label
-      ><br />
-      <label
-        >Description: <textarea name="description" required></textarea></label
-      ><br />
-      <label>Sprint: <input type="text" name="sprint" required /></label><br />
-      <label>
-        Effort (Story Points):
-        <input type="number" step="1" name="effort" required />
-      </label>
-      <br />
-      <label>Comments: <textarea name="comments"></textarea></label><br />
-      <button type="submit">Add Entry</button>
+    <form method="post" class="form-grid">
+      <div class="form-row">
+        <label class="form-label" for="pbi_number">PBI Number:</label>
+        <input
+          type="text"
+          id="pbi_number"
+          name="pbi_number"
+          class="form-input"
+          required
+        />
+      </div>
+
+      <div class="form-row">
+        <label class="form-label" for="description">Description:</label>
+        <textarea
+          id="description"
+          name="description"
+          class="form-input"
+          required
+        ></textarea>
+      </div>
+
+      <div class="form-row">
+        <label class="form-label" for="sprint">Sprint:</label>
+        <input
+          type="text"
+          id="sprint"
+          name="sprint"
+          class="form-input"
+          required
+        />
+      </div>
+
+      <div class="form-row">
+        <label class="form-label" for="effort">Effort (Story Points):</label>
+        <input
+          type="number"
+          id="effort"
+          step="1"
+          name="effort"
+          class="form-input"
+          required
+        />
+      </div>
+
+      <div class="form-row">
+        <label class="form-label" for="comments">Comments:</label>
+        <textarea id="comments" name="comments" class="form-input"></textarea>
+      </div>
+
+      <div class="button-container">
+        <button type="submit" class="submit-button">Add Entry</button>
+        <a href="/" class="back-button">Back to Work Log</a>
+      </div>
     </form>
-    <a href="/">Back to Work Log</a>
   </body>
 </html>
