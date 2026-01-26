@@ -40,38 +40,41 @@ jobs:
         run: |
           # Check if PR already exists
           existing_pr=$(gh pr list --head ${{ github.ref_name }} --json number --jq '.[0].number' 2>/dev/null || echo "")
-          
+
           if [ -n "$existing_pr" ]; then
             echo "PR #$existing_pr already exists for branch ${{ github.ref_name }}"
             exit 0
           fi
-          
+
           # Create new PR
-          pr_title="🚀 $([ "${{ github.ref_name }}" = "fix-tests-add-unit-tests" ] && echo "Fix tests and add comprehensive unit tests" || echo "PR: ${{ github.ref_name }}")"
-          
+          branch="${{ github.ref_name }}"
+          pr_title="🚀 $(echo "$branch" | sed 's/-/ /g' | sed 's/\b\w/\U&/g')"
+
+          BODY="## 🤖 Automated Pull Request\n"
+          BODY+="\n"
+          BODY+="This PR was automatically created after successful CI tests.\n"
+          BODY+="\n"
+          BODY+="### Branch: \`${{ github.ref_name }}\`\n"
+          BODY+="### Commit: ${{ github.sha }}\n"
+          BODY+="\n"
+          BODY+="### ✅ CI Status\n"
+          BODY+="- ✅ Tests passed\n"
+          BODY+="- ✅ Code quality checks passed\n"
+          BODY+="- ✅ Ready for review\n"
+          BODY+="\n"
+          BODY+="### 🔍 Code Review Checklist\n"
+          BODY+="- [ ] Code follows project conventions\n"
+          BODY+="- [ ] Tests are comprehensive\n"
+          BODY+="- [ ] Documentation is updated\n"
+          BODY+="- [ ] No breaking changes\n"
+          BODY+="- [ ] Performance impact assessed\n"
+          BODY+="\n"
+          BODY+="---\n"
+          BODY+="*Created automatically by GitHub Actions*\n"
+
           gh pr create \
             --title "$pr_title" \
-            --body "## 🤖 Automated Pull Request
-
-This PR was automatically created after successful CI tests.
-
-### Branch: \`${{ github.ref_name }}\`
-### Commit: ${{ github.sha }}
-
-### ✅ CI Status
-- ✅ Tests passed
-- ✅ Code quality checks passed
-- ✅ Ready for review
-
-### 🔍 Code Review Checklist
-- [ ] Code follows project conventions
-- [ ] Tests are comprehensive
-- [ ] Documentation is updated
-- [ ] No breaking changes
-- [ ] Performance impact assessed
-
----
-*Created automatically by GitHub Actions*" \
+            --body "$BODY" \
             --base main \
             --head ${{ github.ref_name }} \
             --label "automated-pr,ready-for-review"
