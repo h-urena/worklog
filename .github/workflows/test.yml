@@ -33,6 +33,10 @@ jobs:
     runs-on: ubuntu-latest
     if: github.event_name == 'push' && github.ref != 'refs/heads/main' && !contains(github.ref, 'dependabot')
 
+    permissions:
+      contents: write
+      pull-requests: write
+
     steps:
       - uses: actions/checkout@v4
 
