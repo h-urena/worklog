@@ -1,43 +1,112 @@
-# Work Log Flask App
+# Work Tracker
 
-A simple Flask application to keep track of work log entries using SQLite.
+A Flask-based web application for tracking work logs and achievements, designed for performance review preparation and cross-device synchronization.
 
 ## Features
 
-- Add, view, and delete work log entries
-- Each entry includes date, description, tags, and time spent
+### 📋 Work Log
+
+- Track daily work items with PBI numbers
+- Record descriptions, sprints, and effort estimates
+- Add comments and notes
+- Easy deletion of completed items
+
+### 🏆 Achievements
+
+- Document accomplishments for performance reviews
+- Categorize achievements (Technical, Leadership, Impact, etc.)
+- Link achievements to specific work log entries
+- Beautiful card-based layout for quick scanning
+- Track sprints and add detailed comments
+
+### 🔄 Cross-Device Sync
+
+- PostgreSQL cloud database (Neon.tech)
+- Access your data from any laptop
+- No manual sync required
+- Secure and reliable
 
 ## Quick Start
 
 1. Clone the repository:
    ```bash
-   git clone https://github.com/yourusername/work-log-flask.git
-   cd work-log-flask
+   git clone <your-repo-url>
+   cd Work-Tracker
    ```
-2. (Optional) Create and activate a virtual environment:
+2. Create and activate a virtual environment:
    ```bash
    python -m venv worklog
-   .\worklog\Scripts\Activate  # On Windows
+   worklog\Scripts\activate  # On Windows
    source worklog/bin/activate   # On macOS/Linux
    ```
-3. Install dependencies and run the app as described above.
+3. Install dependencies:
+   ```bash
+   pip install -r requirements.txt
+   ```
+4. Configure database (see [Setup Guide](.github/SETUP.md)):
+   - Create free account at [neon.tech](https://neon.tech)
+   - Copy `config/.env.example` to `.env`
+   - Add your database connection string
+5. Initialize database:
+
+   ```bash
+   flask db init
+   flask db migrate -m "Initial migration"
+   flask db upgrade
+   ```
+
+6. Run the app:
+
+   ```bash
+   python -m app
+   ```
+
+7. Open in browser: `http://127.0.0.1:5000`
+
+## Documentation
+
+- [Detailed Setup Guide](.github/SETUP.md) - Comprehensive setup instructions
+- [Automation Scripts](.github/AUTOMATION.md) - Automated setup
+- [Implementation Details](docs/IMPLEMENTATION.md) - Complete implementation summary and deployment
+
+## Project Structure
+
+```
+Work-Tracker/
+├── app/                    # Flask application
+│   ├── models/            # Database models
+│   ├── routes/            # Route handlers
+│   ├── templates/         # Jinja2 templates
+│   └── static/            # CSS, JS, images
+├── config/                # Configuration files
+│   └── .env.example       # Environment template
+├── scripts/               # Setup and automation scripts
+│   ├── setup-database.ps1 # Windows database setup
+│   └── setup-database.sh  # Linux/macOS database setup
+├── docs/                  # Documentation
+│   └── IMPLEMENTATION.md  # Implementation details
+├── migrations/            # Database migrations
+├── tests/                 # Test files
+├── .env                   # Local environment (not committed)
+├── .github/               # GitHub-specific files
+└── requirements.txt       # Python dependencies
+```
 
 ## Configuration
 
-- The default database is SQLite and will be created as `worklog.db` in the project root.
-- To use a different database, set the `SQLALCHEMY_DATABASE_URI` in `app/__init__.py` or via environment variable.
-- For production, set `FLASK_ENV=production` and configure a secure secret key.
+- Database configuration via `.env` file (never committed to Git)
+- Automatic fallback to SQLite for local development
+- Cross-device sync through cloud PostgreSQL database
 
 ## Planned Improvements
 
-- Environment-based configuration
-- Flask-Migrate integration
-- CSRF protection and input validation
-- More tests and coverage
-- User authentication
-- API endpoints
-- Data export (CSV/PDF)
+- User authentication and authorization
+- Edit functionality for work logs and achievements
+- Search and filter capabilities
+- Data export (CSV/PDF/Word)
 - Dashboard and analytics
+- Tags customization
+- API endpoints
 
 ## Python Version
 
@@ -47,29 +116,11 @@ A simple Flask application to keep track of work log entries using SQLite.
 
 MIT License. See `LICENSE` file for details.
 
-## Contact
+## Contributing
 
-For questions or suggestions, open an issue or contact [your email here].
-
-## Setup
-
-1. Install dependencies:
-   ```bash
-   pip install -r requirements.txt
-   ```
-2. Run the app:
-   ```bash
-   python -m app
-   ```
-
-## Project Structure
-
-- `app/` - Main application code
-- `app/models/` - Database models
-- `app/routes/` - Application routes
-- `app/templates/` - HTML templates
-- `app/static/` - CSS and static files
-- `tests/` - (For your tests)
+- Add docstrings to all new functions and classes.
+- Write tests for new features.
+- Follow Flask and Python best practices for structure and security.
 
 ## Running Tests
 
@@ -79,16 +130,6 @@ To run the test suite:
 pytest
 ```
 
-## Contributing
-
-- Add docstrings to all new functions and classes.
-- Write tests for new features.
-- Follow Flask and Python best practices for structure and security.
-
-## Notes
-
-- The database file `worklog.db` will be created automatically on first run.
-
 ## Database Migrations
 
 This project uses [Flask-Migrate](https://flask-migrate.readthedocs.io/) to manage database schema changes. Migration scripts are included in the `migrations/` folder. To apply migrations, run:
@@ -96,3 +137,8 @@ This project uses [Flask-Migrate](https://flask-migrate.readthedocs.io/) to mana
 ```bash
 flask db upgrade
 ```
+
+## Notes
+
+- The database file `worklog.db` will be created automatically on first run (SQLite fallback).
+- For production, use PostgreSQL via the `DATABASE_URL` environment variable.
