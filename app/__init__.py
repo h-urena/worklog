@@ -22,9 +22,9 @@ def create_app(config_name=None):
         app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///:memory:'
     else:
         # Use PostgreSQL from environment variable, fallback to SQLite for local dev
-        database_url = os.getenv('DATABASE_URL')
-        if database_url:
-            app.config['SQLALCHEMY_DATABASE_URI'] = database_url
+        db_url = os.getenv('DATABASE_URL')
+        if db_url:
+            app.config['SQLALCHEMY_DATABASE_URI'] = db_url
         else:
             # Fallback to SQLite for local development
             app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///worklog.db'

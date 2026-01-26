@@ -1,4 +1,4 @@
-from flask import Blueprint, render_template, request, redirect, url_for
+from flask import Blueprint, render_template, request, redirect, url_for, abort
 from app import db
 from app.models.worklog import WorkLog
 from app.models.achievement import Achievement
@@ -36,7 +36,9 @@ def add_entry():
 @main.route('/delete/<int:id>')
 def delete_entry(id):
     """Delete a work log entry by ID."""
-    entry = WorkLog.query.get_or_404(id)
+    entry = db.session.get(WorkLog, id)
+    if entry is None:
+        abort(404)
     db.session.delete(entry)
     db.session.commit()
     return redirect(url_for('main.index'))
@@ -71,7 +73,9 @@ def add_achievement():
 @main.route('/achievements/delete/<int:id>')
 def delete_achievement(id):
     """Delete an achievement by ID."""
-    achievement = Achievement.query.get_or_404(id)
+    achievement = db.session.get(Achievement, id)
+    if achievement is None:
+        abort(404)
     db.session.delete(achievement)
     db.session.commit()
     return redirect(url_for('main.index'))
