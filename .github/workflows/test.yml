@@ -22,3 +22,54 @@ jobs:
       - name: Run tests
         run: |
           python -m pytest tests/ -v
+
+      - name: Run code quality checks
+        run: |
+          python -m pylint app/ tests/ --errors-only --score-no
+
+  create-pr:
+    needs: test
+    runs-on: ubuntu-latest
+    if: github.event_name == 'push' && github.ref != 'refs/heads/main' && !contains(github.ref, 'dependabot')
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Create Pull Request
+        uses: peter-evans/create-pull-request@v5
+        with:
+          token: ${{ secrets.GITHUB_TOKEN }}
+          branch: ${{ github.ref_name }}
+          base: main
+          title: "🚀 ${{
+            github.ref_name == 'fix-tests-add-unit-tests' && 'Fix tests and add comprehensive unit tests' ||
+            contains(github.ref_name, 'feature/') && format('Feature: {0}', github.ref_name) ||
+            contains(github.ref_name, 'bugfix/') && format('Bugfix: {0}', github.ref_name) ||
+            format('PR: {0}', github.ref_name)
+          }}"
+          body: |
+            ## 🤖 Automated Pull Request
+
+            This PR was automatically created after successful CI tests.
+
+            ### Branch: `${{ github.ref_name }}`
+            ### Commit: ${{ github.sha }}
+
+            ### ✅ CI Status
+            - ✅ Tests passed
+            - ✅ Code quality checks passed
+            - ✅ Ready for review
+
+            ### 🔍 Code Review Checklist
+            - [ ] Code follows project conventions
+            - [ ] Tests are comprehensive
+            - [ ] Documentation is updated
+            - [ ] No breaking changes
+            - [ ] Performance impact assessed
+
+            ---
+            *Created automatically by GitHub Actions*
+          labels: |
+            automated-pr
+            ready-for-review
+          draft: false

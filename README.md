@@ -116,6 +116,44 @@ Work-Tracker/
 
 MIT License. See `LICENSE` file for details.
 
+## 🤖 Automation & Code Review
+
+This project includes automated code review and CI/CD pipelines to ensure code quality.
+
+### Local Code Review
+
+Before committing, the pre-commit hook automatically runs:
+- ✅ Unit tests
+- ✅ Code linting (pylint)
+- ✅ TODO/FIXME comment detection
+- ✅ Large file detection
+
+**Manual Code Review:**
+```bash
+# Linux/Mac
+./scripts/code-review.sh
+
+# Windows
+scripts\code-review.bat
+```
+
+### CI/CD Pipeline
+
+GitHub Actions automatically:
+- 🧪 Runs tests on every push/PR
+- 🔍 Performs code quality checks
+- 🚀 Creates pull requests for feature branches
+- 📊 Generates coverage reports
+
+**Pre-commit Hook:**
+The `.git/hooks/pre-commit` script runs automatically before each commit to ensure code quality.
+
+**Automatic PR Creation:**
+When you push a feature branch, GitHub Actions will automatically create a pull request with:
+- ✅ CI status checks
+- 📋 Code review checklist
+- 🏷️ Automated labels
+
 ## Contributing
 
 - Add docstrings to all new functions and classes.
