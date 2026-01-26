@@ -52,7 +52,8 @@ jobs:
 
           # Create new PR
           branch="${{ github.ref_name }}"
-          pr_title="🚀 $(echo "$branch" | sed 's/-/ /g' | sed 's/\b\w/\U&/g')"
+          dynamic_title="$(echo "$branch" | sed 's/-/ /g' | sed 's/\b\w/\U&/g')"
+          pr_title="🤖 Automated Pull Request: $dynamic_title"
 
           BODY="## 🤖 Automated Pull Request\n"
           BODY+="\n"
