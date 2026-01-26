@@ -37,40 +37,43 @@ jobs:
       - uses: actions/checkout@v4
 
       - name: Create Pull Request
-        uses: peter-evans/create-pull-request@v5
-        with:
-          token: ${{ secrets.GITHUB_TOKEN }}
-          branch: ${{ github.ref_name }}
-          base: main
-          title: "🚀 ${{
-            github.ref_name == 'fix-tests-add-unit-tests' && 'Fix tests and add comprehensive unit tests' ||
-            contains(github.ref_name, 'feature/') && format('Feature: {0}', github.ref_name) ||
-            contains(github.ref_name, 'bugfix/') && format('Bugfix: {0}', github.ref_name) ||
-            format('PR: {0}', github.ref_name)
-          }}"
-          body: |
-            ## 🤖 Automated Pull Request
+        run: |
+          # Check if PR already exists
+          existing_pr=$(gh pr list --head ${{ github.ref_name }} --json number --jq '.[0].number' 2>/dev/null || echo "")
+          
+          if [ -n "$existing_pr" ]; then
+            echo "PR #$existing_pr already exists for branch ${{ github.ref_name }}"
+            exit 0
+          fi
+          
+          # Create new PR
+          pr_title="🚀 $([ "${{ github.ref_name }}" = "fix-tests-add-unit-tests" ] && echo "Fix tests and add comprehensive unit tests" || echo "PR: ${{ github.ref_name }}")"
+          
+          gh pr create \
+            --title "$pr_title" \
+            --body "## 🤖 Automated Pull Request
 
-            This PR was automatically created after successful CI tests.
+This PR was automatically created after successful CI tests.
 
-            ### Branch: `${{ github.ref_name }}`
-            ### Commit: ${{ github.sha }}
+### Branch: \`${{ github.ref_name }}\`
+### Commit: ${{ github.sha }}
 
-            ### ✅ CI Status
-            - ✅ Tests passed
-            - ✅ Code quality checks passed
-            - ✅ Ready for review
+### ✅ CI Status
+- ✅ Tests passed
+- ✅ Code quality checks passed
+- ✅ Ready for review
 
-            ### 🔍 Code Review Checklist
-            - [ ] Code follows project conventions
-            - [ ] Tests are comprehensive
-            - [ ] Documentation is updated
-            - [ ] No breaking changes
-            - [ ] Performance impact assessed
+### 🔍 Code Review Checklist
+- [ ] Code follows project conventions
+- [ ] Tests are comprehensive
+- [ ] Documentation is updated
+- [ ] No breaking changes
+- [ ] Performance impact assessed
 
-            ---
-            *Created automatically by GitHub Actions*
-          labels: |
-            automated-pr
-            ready-for-review
-          draft: false
+---
+*Created automatically by GitHub Actions*" \
+            --base main \
+            --head ${{ github.ref_name }} \
+            --label "automated-pr,ready-for-review"
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
