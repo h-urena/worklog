@@ -76,7 +76,6 @@ jobs:
             --title "$pr_title" \
             --body "$BODY" \
             --base main \
-            --head ${{ github.ref_name }} \
-            --label "automated-pr,ready-for-review"
+            --head ${{ github.ref_name }}
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
