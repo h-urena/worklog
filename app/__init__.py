@@ -16,10 +16,6 @@ def create_app(config_name=None):
     """Application factory function."""
     flask_app = Flask(__name__)
 
-    # Register blueprints
-    from app.routes.main import main
-    flask_app.register_blueprint(main)
-
     # Configuration
     if config_name == 'test':
         flask_app.config['TESTING'] = True
@@ -38,6 +34,10 @@ def create_app(config_name=None):
     # Initialize extensions
     db.init_app(flask_app)
     migrate.init_app(flask_app, db)
+
+    # Register blueprints
+    from app.routes.main import main
+    flask_app.register_blueprint(main)
 
     return flask_app
 
