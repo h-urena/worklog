@@ -1,3 +1,5 @@
+"""Module for defining the WorkLog model."""
+
 from app import db
 
 class WorkLog(db.Model):

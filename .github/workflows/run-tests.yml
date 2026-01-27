@@ -83,9 +83,5 @@ jobs:
             --base main \
             --head ${{ github.ref_name }} \
             --reviewer h-urena
-
-          # Request Copilot review
-          pr_number=$(gh pr view --json number -q .number)
-          gh api repos/${{ github.repository }}/pulls/$pr_number/requested_reviewers -f reviewers='["copilot"]'
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}

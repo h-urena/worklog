@@ -1,38 +1,43 @@
-import pytest
-import sys
+"""
+Pytest configuration and fixtures for the worklog application.
+"""
+
 import os.path
+import sys
+import pytest
+from app import create_app, db
+from app.models.achievement import Achievement
+from app.models.worklog import WorkLog
 
 # Add the project root to Python path
 sys.path.insert(0, os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
 
-from app import create_app, db
 
 @pytest.fixture
-def app():
-    """Test app fixture with test database."""
-    app = create_app('testing')
-    return app
+def test_app():
+    """Test app fixture."""
+    return create_app('test')
+
 
 @pytest.fixture
-def client(app):
+def client(test_app):
     """Test client fixture."""
-    return app.test_client()
+    return test_app.test_client()
+
 
 @pytest.fixture(autouse=True)
-def setup_database(app):
+def setup_database(test_app):
     """Set up database tables for all tests."""
-    with app.app_context():
+    with test_app.app_context():
         db.create_all()
         yield
         db.drop_all()
 
-@pytest.fixture
-def init_database(app):
-    """Initialize database with test data."""
-    with app.app_context():
-        from app.models.worklog import WorkLog
-        from app.models.achievement import Achievement
 
+@pytest.fixture
+def init_database(test_app):
+    """Initialize database with test data."""
+    with test_app.app_context():
         # Create test data
         worklog = WorkLog(
             pbi_number='TEST-001',

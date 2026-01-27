@@ -1,3 +1,9 @@
+"""Basic tests for the worklog application."""
+
+from app.models.achievement import Achievement
+from app.models.worklog import WorkLog
+
+
 def test_homepage(client):
     """Test that the homepage loads successfully."""
     response = client.get('/')
@@ -30,32 +36,30 @@ def test_add_achievement(client):
     assert response.status_code == 200
     assert b'Test Achievement' in response.data
 
-def test_delete_worklog_entry(client, init_database, app):
+def test_delete_worklog_entry(client, init_database, test_app):
     """Test deleting a work log entry."""
-    from app.models.worklog import WorkLog
     worklog, _ = init_database
     worklog_id = worklog.id
-    
+
     response = client.get(f'/delete/{worklog_id}', follow_redirects=True)
     assert response.status_code == 200
     assert b'TEST-001' not in response.data
-    
+
     # Verify deletion in database
-    with app.app_context():
+    with test_app.app_context():
         assert WorkLog.query.filter_by(id=worklog_id).first() is None
 
-def test_delete_achievement(client, init_database, app):
+def test_delete_achievement(client, init_database, test_app):
     """Test deleting an achievement."""
-    from app.models.achievement import Achievement
     _, achievement = init_database
     achievement_id = achievement.id
-    
+
     response = client.get(f'/achievements/delete/{achievement_id}', follow_redirects=True)
     assert response.status_code == 200
     assert b'Test Achievement' not in response.data
-    
+
     # Verify deletion in database
-    with app.app_context():
+    with test_app.app_context():
         assert Achievement.query.filter_by(id=achievement_id).first() is None
 
 def test_delete_nonexistent_worklog(client):
