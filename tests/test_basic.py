@@ -30,19 +30,43 @@ def test_add_achievement(client):
     assert response.status_code == 200
     assert b'Test Achievement' in response.data
 
-def test_delete_worklog_entry(client, init_database):
+def test_delete_worklog_entry(client, init_database, app):
     """Test deleting a work log entry."""
+    from app.models.worklog import WorkLog
     worklog, _ = init_database
-    response = client.get(f'/delete/{worklog.id}', follow_redirects=True)
+    worklog_id = worklog.id
+    
+    response = client.get(f'/delete/{worklog_id}', follow_redirects=True)
     assert response.status_code == 200
     assert b'TEST-001' not in response.data
+    
+    # Verify deletion in database
+    with app.app_context():
+        assert WorkLog.query.filter_by(id=worklog_id).first() is None
 
-def test_delete_achievement(client, init_database):
+def test_delete_achievement(client, init_database, app):
     """Test deleting an achievement."""
+    from app.models.achievement import Achievement
     _, achievement = init_database
-    response = client.get(f'/achievements/delete/{achievement.id}', follow_redirects=True)
+    achievement_id = achievement.id
+    
+    response = client.get(f'/achievements/delete/{achievement_id}', follow_redirects=True)
     assert response.status_code == 200
     assert b'Test Achievement' not in response.data
+    
+    # Verify deletion in database
+    with app.app_context():
+        assert Achievement.query.filter_by(id=achievement_id).first() is None
+
+def test_delete_nonexistent_worklog(client):
+    """Test deleting a non-existent work log entry returns 404."""
+    response = client.get('/delete/99999')
+    assert response.status_code == 404
+
+def test_delete_nonexistent_achievement(client):
+    """Test deleting a non-existent achievement returns 404."""
+    response = client.get('/achievements/delete/99999')
+    assert response.status_code == 404
 
 def test_worklog_model(init_database):
     """Test WorkLog model creation and attributes."""
