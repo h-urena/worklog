@@ -2,16 +2,10 @@
 Pytest configuration and fixtures for the worklog application.
 """
 
-import os.path
-import sys
 import pytest
 from app import create_app, db
 from app.models.achievement import Achievement
 from app.models.worklog import WorkLog
-
-# Add the project root to Python path
-sys.path.insert(0, os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
-
 
 @pytest.fixture
 def test_app():
